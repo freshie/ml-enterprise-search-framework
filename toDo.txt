@@ -1,0 +1,6 @@
+in search-lib 
+	- make a better grammar parser
+	- have a flag that checks if they want stop words removed
+	- create a way to get the users for the save function
+	- rework the get_implementation() function for formatting to xml or json
+	- get facets working
