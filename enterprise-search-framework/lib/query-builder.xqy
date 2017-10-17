@@ -2,7 +2,7 @@ xquery version "1.0-ml";
 
 module namespace qbl = "https://github.com/freshie/ml-enterprise-search-framework/lib/query-builder";
 
-import module namespace pqa= "https://github.com/freshie/ml-enterprise-search-framework/pre-query-analysis-lib" at "/ext/enterprise-search-framework/lib/pre-query-analysis.xqy";
+import module namespace pqa= "https://github.com/freshie/ml-enterprise-search-framework/lib/pre-query-analysis" at "/ext/enterprise-search-framework/lib/pre-query-analysis.xqy";
 import module namespace cmq = "https://github.com/freshie/ml-enterprise-search-framework/plugins/custom-matching-query" at "/ext/enterprise-search-framework/plugins/custom-matching-query.xqy";
 import module namespace cbq = "https://github.com/freshie/ml-enterprise-search-framework/plugins/custom-matching-query" at "/ext/enterprise-search-framework/plugins/custom-boosting-query.xqy";
 

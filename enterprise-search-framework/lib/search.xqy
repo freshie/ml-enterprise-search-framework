@@ -3,13 +3,12 @@ xquery version "1.0-ml";
 module namespace searchlib = "https://github.com/freshie/ml-enterprise-search-framework/lib/search";
 
 import module namespace qbl = "https://github.com/freshie/ml-enterprise-search-framework/lib/query-builder" at "/ext/enterprise-search-framework/lib/query-builder.xqy";
-import module namespace util = "https://github.com/freshie/ml-enterprise-search-framework/utilities-lib" at "/ext/enterprise-search-framework/lib/utilities.xqy";
+import module namespace util = "https://github.com/freshie/ml-enterprise-search-framework/lib/utilities" at "/ext/enterprise-search-framework/lib/utilities.xqy";
+import module namespace config = "https://github.com/freshie/ml-enterprise-search-framework/lib/configuration" at "/ext/enterprise-search-framework/lib/configuration.xqy";
 import module namespace saved-query-lib = "https://github.com/freshie/ml-enterprise-search-framework/lib/saved-query" at "/ext/enterprise-search-framework/lib/saved-query.xqy";
 import module namespace best-bets-lib = "https://github.com/freshie/ml-enterprise-search-framework/lib/direct-answers" at "/ext/enterprise-search-framework/lib/best-bets.xqy";
 import module namespace spell-correct = "https://github.com/freshie/ml-enterprise-search-framework/lib/spell-correct" at "/ext/enterprise-search-framework/lib/spell-corrections.xqy";
 import module namespace related-search = "https://github.com/freshie/ml-enterprise-search-framework/lib/related-search" at "/ext/enterprise-search-framework/lib/related-search.xqy";
-
-declare variable $BaseURI := "/enterprise-search-framework/"
 
 declare function searchlib:get-results(
   $params as map:map,
@@ -155,9 +154,9 @@ declare function searchlib:add-best-bets(
 declare function searchlib:get-options(
   $entity as xs:string
 ) as item()* {
-  let $defaultOptions := fn:doc($BaseURI || "configurations/options-default.xml")/node()
+  let $defaultOptions := fn:doc($config:BaseURI || "configurations/options-default.xml")/node()
 
-  let $entityOptionsURI := $BaseURI || "configurations/options-"|| $entity || "default.xml"
+  let $entityOptionsURI := $config:BaseURI || "configurations/options-"|| $entity || "default.xml"
 
   return 
     if (fn:doc-available($entityOptionsURI)) then (
@@ -201,7 +200,7 @@ declare function searchlib:get-phrases(
         cts:and-query((
           cts:collection-query((
             for $name in $vocabularys/name/xs:string(.)
-            return $BaseURI || "vocabularies/" || $name
+            return $config:BaseURI || "vocabularies/" || $name
           )),
           cts:reverse-query($node)
         )),
@@ -212,7 +211,7 @@ declare function searchlib:get-phrases(
 
     let $buildPhraseMap :=
       for $doc in $phrases
-      let $type := xdmp:document-get-collections(xdmp:node-uri($doc)) ! fn:substring-after(., $BaseURI || "vocabularies/")[. ne ""]
+      let $type := xdmp:document-get-collections(xdmp:node-uri($doc)) ! fn:substring-after(., $config:BaseURI || "vocabularies/")[. ne ""]
 
       let $elements := ($doc/element()/element(), $doc/element()/element()/element())
 
@@ -323,7 +322,7 @@ declare function searchlib:generate-params-map(
 
     
     let $stopWords := 
-      fn:doc($BaseURI || "dictionaries/" || map:get($newMap, "language") || "/stopwords.xml")/spell:dictionary/spell:word/text();
+      fn:doc($config:BaseURI || "dictionaries/" || map:get($newMap, "language") || "/stopwords.xml")/spell:dictionary/spell:word/text();
        
     let $_ := map:put($newMap, "stopWords", $stopWords)
 
@@ -362,7 +361,7 @@ declare function searchlib:generate-params-map(
 
     let $weightsConfigurationsFile := (map:get($newMap,"weightFile"),"weights")[1]
 
-    let $weightsConfigurations := fn:doc($BaseURI "configuration/weights-"|| $weightsConfigurationsFile || ".xml")/element()
+    let $weightsConfigurations := fn:doc($config:BaseURI "configuration/weights-"|| $weightsConfigurationsFile || ".xml")/element()
 
     let $_ := map:put($newMap, "weightsConfigurations", $weightsConfigurations)
 
