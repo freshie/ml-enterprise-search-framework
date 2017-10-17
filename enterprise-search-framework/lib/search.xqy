@@ -1,12 +1,12 @@
 xquery version "1.0-ml";
 
-module namespace searchlib = "https://github.com/freshie/ml-enterprise-search-framework/search-lib";
+module namespace searchlib = "https://github.com/freshie/ml-enterprise-search-framework/lib/search";
 
-import module namespace qbl = "https://github.com/freshie/ml-enterprise-search-framework/query-builder-lib" at "/ext/enterprise-search-framework/queryBuilder-lib.xqy";
-import module namespace saved-query-lib = "https://github.com/freshie/ml-enterprise-search-framework/saved-query-lib" at "/ext/enterprise-search-framework/savedQuery-lib.xqy";
-import module namespace best-bets-lib = "https://github.com/freshie/ml-enterprise-search-framework/direct-answers-lib" at "/ext/enterprise-search-framework/best-bets-lib.xqy";
-import module namespace spell-correct = "https://github.com/freshie/ml-enterprise-search-framework/spell-correct-lib" at "/ext/enterprise-search-framework/spell-corrections-lib.xqy";
-import module namespace related-search = "https://github.com/freshie/ml-enterprise-search-framework/related-search-lib" at "/ext/enterprise-search-framework/related-search-lib.xqy";
+import module namespace qbl = "https://github.com/freshie/ml-enterprise-search-framework/lib/query-builder" at "/ext/enterprise-search-framework/lib/query-builder.xqy";
+import module namespace saved-query-lib = "https://github.com/freshie/ml-enterprise-search-framework/lib/saved-query" at "/ext/enterprise-search-framework/lib/saved-query.xqy";
+import module namespace best-bets-lib = "https://github.com/freshie/ml-enterprise-search-framework/lib/direct-answers" at "/ext/enterprise-search-framework/lib/best-bets.xqy";
+import module namespace spell-correct = "https://github.com/freshie/ml-enterprise-search-framework/lib/spell-correct" at "/ext/enterprise-search-framework/lib/spell-corrections.xqy";
+import module namespace related-search = "https://github.com/freshie/ml-enterprise-search-framework/lib/related-search" at "/ext/enterprise-search-framework/lib/related-search.xqy";
 
 declare variable $BaseURI := "/enterprise-search-framework/"
 
