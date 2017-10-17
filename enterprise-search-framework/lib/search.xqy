@@ -3,6 +3,7 @@ xquery version "1.0-ml";
 module namespace searchlib = "https://github.com/freshie/ml-enterprise-search-framework/lib/search";
 
 import module namespace qbl = "https://github.com/freshie/ml-enterprise-search-framework/lib/query-builder" at "/ext/enterprise-search-framework/lib/query-builder.xqy";
+import module namespace util = "https://github.com/freshie/ml-enterprise-search-framework/utilities-lib" at "/ext/enterprise-search-framework/lib/utilities.xqy";
 import module namespace saved-query-lib = "https://github.com/freshie/ml-enterprise-search-framework/lib/saved-query" at "/ext/enterprise-search-framework/lib/saved-query.xqy";
 import module namespace best-bets-lib = "https://github.com/freshie/ml-enterprise-search-framework/lib/direct-answers" at "/ext/enterprise-search-framework/lib/best-bets.xqy";
 import module namespace spell-correct = "https://github.com/freshie/ml-enterprise-search-framework/lib/spell-correct" at "/ext/enterprise-search-framework/lib/spell-corrections.xqy";
@@ -302,40 +303,6 @@ declare function searchlib:generate-query-map(
 };
 
 (:
-  Takes in a string and a squance of stop words.
-  Removes the stop words from the string
-:)
-declare function searchlib:remove-words-from-string(
-  $stringIN as xs:string*,
-  $stopWordsIN as xs:string*
-) as xs:string* {
-  if (fn:empty($stopWordsIN) or fn:empty($stringIN)) then (
-
-  ) else (
-    let $string := fn:lower-case($stringIN)
-    let $stopWordsJoined := fn:string-join($stopWordsIN, "\b|")
-    let $stopWordsJoined := "\b"|| $stopWordsJoined 
-    return
-    (:
-       need to use javascript because xquery doesnt have forward lookups
-       Its also much faster in javascript
-    :)
-     xdmp:javascript-eval(
-       " 
-         var text; 
-         var match;
-         re = new RegExp(match, 'g');
-         text.replace(re, ' ')",
-       (
-         "text",$string,
-         "match",$stopWordsJoined
-        )
-     )
-   )
-};
-
-
-(:
     goes through some keys in the param map
     adds some new params to the map
 :)
@@ -362,9 +329,11 @@ declare function searchlib:generate-params-map(
 
     (:
       TODO: have a flag that checks if they want stop words removed
+
+      removes stops words
     :)
     let $clean-q := 
-      searchlib:remove-words-from-string(
+      util:remove-words-from-string(
         xdmp:url-decode(map:get($params,"q")), 
         map:get($newMap, "stopWords")
       )

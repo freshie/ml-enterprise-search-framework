@@ -41,7 +41,7 @@ declare function lib:query-for-people(
     let $partial := if (fn:contains($partial,":")) then () else $partial
 
     let $wordCount := fn:count($ctsWords)
-    where $wordCount le 4 and $wordCount ge 1
+    where $wordCount le 5 and $wordCount ge 1
     return 
       let $permutations := util:getPermutations($ctsWords)
 
