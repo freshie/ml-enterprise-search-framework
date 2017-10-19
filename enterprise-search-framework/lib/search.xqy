@@ -6,7 +6,7 @@ import module namespace qbl = "https://github.com/freshie/ml-enterprise-search-f
 import module namespace util = "https://github.com/freshie/ml-enterprise-search-framework/lib/utilities" at "/ext/enterprise-search-framework/lib/utilities.xqy";
 import module namespace config = "https://github.com/freshie/ml-enterprise-search-framework/lib/configuration" at "/ext/enterprise-search-framework/lib/configuration.xqy";
 import module namespace savedQuery = "https://github.com/freshie/ml-enterprise-search-framework/lib/saved-query" at "/ext/enterprise-search-framework/lib/saved-query.xqy";
-import module namespace best-bets-lib = "https://github.com/freshie/ml-enterprise-search-framework/lib/direct-answers" at "/ext/enterprise-search-framework/lib/best-bets.xqy";
+import module namespace answers = "https://github.com/freshie/ml-enterprise-search-framework/lib/direct-answers" at "/ext/enterprise-search-framework/lib/direct-answers.xqy";
 import module namespace spell-correct = "https://github.com/freshie/ml-enterprise-search-framework/lib/spell-correct" at "/ext/enterprise-search-framework/lib/spell-corrections.xqy";
 import module namespace related-search = "https://github.com/freshie/ml-enterprise-search-framework/lib/related-search" at "/ext/enterprise-search-framework/lib/related-search.xqy";
 
@@ -67,7 +67,7 @@ declare function searchlib:get_implementation(
   (: this allows any domain to make requests to this endpoint :)
   let $addHeader := xdmp:add-response-header("Access-Control-Allow-Origin","*")
 
-  let $spell-corrections := spell-correct:get-spell-corrections($paramsIN)
+  let $spellCorrections := spell-correct:get-spell-corrections($paramsIN)
   
   let $preparedSearchItems as item()+ := searchlib:prepare-search-parameters($paramsIN)
   let $params as map:map():= $preparedSearchItems[1]
@@ -83,7 +83,7 @@ declare function searchlib:get_implementation(
 
   let $results := searchlib:get-results($params, $queryMap, "unfiltered", cts:true-query())
 
-  let $bestbetsresponse := searchlib:add-best-bets($params, $queryMap)
+  let $directAnswers := searchlib:add-direct-answers($params, $queryMap)
 
   let $results :=
     if ($format eq 'json') then (
@@ -97,7 +97,7 @@ declare function searchlib:get_implementation(
 
       let $response := xdmp:from-json($results)
       
-      let $_ := map:put($response, "answers", $bestbetsresponse)
+      let $_ := map:put($response, "directAnswers", $directAnswers)
 
       let $_ := map:put($response, "phrases", map:get($params, "phrases"))
 
@@ -119,7 +119,7 @@ declare function searchlib:get_implementation(
 
       let $_ := map:put($response, "relatedSearches", related-search:get-related-search($params))
 
-      let $_ := map:put($response, "spell-corrections", spell-correct:get-spell-corrections-map($spell-corrections))
+      let $_ := map:put($response, "spellCorrections", spell-correct:get-spell-corrections-map($spellCorrections))
 
       let $_ := xdmp:set-response-content-type("application/json")
      
@@ -133,17 +133,17 @@ declare function searchlib:get_implementation(
    if its the first page and the flag is set ot true 
    then it will lookup answers bast on the queryText
 :)
-declare function searchlib:add-best-bets(
+declare function searchlib:add-direct-answers(
  $params as map:map,
  $queryMap as map:map
 ) as map:map {
    let $results :=
-     if ((map:get($params,"start") eq 1 or fn:empty(map:get($params,"start"))) and (map:get($params,"returnAnswers") eq "true")) then
-      best-bets-lib:get-results($params)
+     if ((map:get($params,"start") eq 1 or fn:empty(map:get($params,"start"))) and (map:get($params,"getDirectAnswers") eq "true")) then
+      answers:get($params, $queryMap)
     else
       map:map()
 
-  return best-bets-lib:format-results($results, $queryMap, $params)
+  return answers:format-results($results, $queryMap, $params)
   
 };
 
