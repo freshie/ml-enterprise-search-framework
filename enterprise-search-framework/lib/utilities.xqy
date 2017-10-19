@@ -2,6 +2,24 @@ xquery version "1.0-ml";
 
 module namespace utilities = "https://github.com/freshie/ml-enterprise-search-framework/lib/utilities";
 
+(:
+    Takes inputs and generates hashs Them
+:)
+declare function utilities:hashInputs(
+  $inputs as item()*
+) as xs:unsignedLong {
+  let $node :=
+    <xml>
+      <seed>ml-enterprise-search-framework</seed>
+      <inputs>
+        {$inputs}
+      </inputs>
+    </xml>
+  let $string := xdmp:quote($node)
+  return
+    xdmp:hash64($string)
+};
+
 declare function utilities:get-node-size(
   $doc as document-node()
 ) as xs:unsignedLong {

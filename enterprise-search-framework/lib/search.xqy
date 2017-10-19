@@ -5,7 +5,7 @@ module namespace searchlib = "https://github.com/freshie/ml-enterprise-search-fr
 import module namespace qbl = "https://github.com/freshie/ml-enterprise-search-framework/lib/query-builder" at "/ext/enterprise-search-framework/lib/query-builder.xqy";
 import module namespace util = "https://github.com/freshie/ml-enterprise-search-framework/lib/utilities" at "/ext/enterprise-search-framework/lib/utilities.xqy";
 import module namespace config = "https://github.com/freshie/ml-enterprise-search-framework/lib/configuration" at "/ext/enterprise-search-framework/lib/configuration.xqy";
-import module namespace saved-query-lib = "https://github.com/freshie/ml-enterprise-search-framework/lib/saved-query" at "/ext/enterprise-search-framework/lib/saved-query.xqy";
+import module namespace savedQuery = "https://github.com/freshie/ml-enterprise-search-framework/lib/saved-query" at "/ext/enterprise-search-framework/lib/saved-query.xqy";
 import module namespace best-bets-lib = "https://github.com/freshie/ml-enterprise-search-framework/lib/direct-answers" at "/ext/enterprise-search-framework/lib/best-bets.xqy";
 import module namespace spell-correct = "https://github.com/freshie/ml-enterprise-search-framework/lib/spell-correct" at "/ext/enterprise-search-framework/lib/spell-corrections.xqy";
 import module namespace related-search = "https://github.com/freshie/ml-enterprise-search-framework/lib/related-search" at "/ext/enterprise-search-framework/lib/related-search.xqy";
@@ -78,7 +78,7 @@ declare function searchlib:get_implementation(
   (: 
     TODO: create a way to get the users
   :)
-  let $_ := saved-query-lib:add("placeHolder For Users", $queryMap, $params, 'history')
+  let $_ := savedQuery:add("placeHolder For Users", $queryMap, $params, 'history')
 
 
   let $results := searchlib:get-results($params, $queryMap, "unfiltered", cts:true-query())
